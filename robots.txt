@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sergio-velandia.dev/mi-portafolio/sitemap.xml
+Sitemap: https://sergio-velandia.dev/Moss/sitemap.xml
+Sitemap: https://sergio-velandia.dev/Moss-Nexus/sitemap.xml
