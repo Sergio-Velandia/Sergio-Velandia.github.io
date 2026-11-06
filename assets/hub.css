@@ -316,3 +316,145 @@ a {
     outline-offset: 3px;
   }
 }
+
+/* Aviso discreto si la escena no pudo montarse, y salto directo: solo existe con la escena. */
+
+.seguir,
+.escena {
+  display: none;
+}
+
+.aviso {
+  margin-top: 0.25rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+/* Capa de espectáculo: tres capítulos fijos y el scroll como línea de tiempo.
+   Estas reglas solo aplican si assets/escena.js puso la clase; sin JavaScript, con movimiento
+   reducido o sin altura suficiente, la página es la capa base de arriba. */
+
+@media (prefers-reduced-motion: no-preference) and (min-height: 35rem) {
+  .con-escena {
+    --borde: max(var(--gutter), env(safe-area-inset-left));
+  }
+
+  .con-escena body {
+    display: block;
+    min-height: 0;
+    padding: 0;
+  }
+
+  .con-escena main {
+    display: block;
+    height: 400vh;
+    padding: 0;
+  }
+
+  .con-escena .escena {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100vh;
+    height: 100lvh;
+    pointer-events: none;
+  }
+
+  .con-escena .nombre {
+    position: fixed;
+    right: var(--borde);
+    bottom: var(--gutter);
+    left: var(--borde);
+  }
+
+  .con-escena .seguir {
+    display: block;
+    margin-top: 0.25rem;
+  }
+
+  .con-escena .seguir a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-underline-offset: 0.2em;
+    touch-action: manipulation;
+  }
+
+  .con-escena .quien {
+    position: fixed;
+    right: var(--borde);
+    bottom: var(--gutter);
+    left: var(--borde);
+    margin: 0;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-m);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .con-escena .linea {
+    font-size: clamp(2rem, 4.2vw, 4rem);
+  }
+
+  .con-escena .destinos {
+    position: fixed;
+    top: var(--gutter);
+    right: calc(var(--borde) - var(--fila));
+    bottom: var(--alto-pie, 5rem);
+    left: calc(var(--borde) - var(--fila));
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .con-escena .destinos ul {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .con-escena .destinos li {
+    display: flex;
+    flex: 1 1 auto;
+  }
+
+  .con-escena .destino {
+    display: grid;
+    flex: 1;
+  }
+
+  .con-escena .capa {
+    align-content: center;
+  }
+
+  .con-escena .pie {
+    position: fixed;
+    right: var(--borde);
+    bottom: 0;
+    left: var(--borde);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* El foco nunca cae sobre algo invisible, ni un solo cuadro. */
+  .con-escena .destinos:focus-within,
+  .con-escena .pie:focus-within {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  @media (min-width: 62rem) {
+    .con-escena .quien {
+      top: 0;
+      right: 52%;
+      bottom: 0;
+      align-content: center;
+    }
+  }
+}

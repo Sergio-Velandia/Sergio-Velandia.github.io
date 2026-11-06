@@ -30,3 +30,23 @@ Fuentes autoalojadas: Syne 800 y DM Sans 400/500, ambas con licencia SIL OFL (`a
 
 Un solo gesto: al pasar el cursor o enfocar, una copia en oro de la fila se revela con `clip-path`
 (280 ms al entrar, 170 ms al salir). Con `prefers-reduced-motion` pasa a un fundido de 150 ms.
+
+## Escena 3D
+
+`assets/escena.js` es lo único que activa los capítulos dirigidos por scroll. Se carga en el `<head>`
+para hacerlo antes del primer pintado. Sin esa clase, la página es la capa base de arriba.
+
+| Situación | Qué se ve |
+|---|---|
+| Sin JavaScript, `escena.js` caído o con error | Capa base |
+| `prefers-reduced-motion` | Capa base, sin contexto WebGL ni descarga de three.js |
+| Ventana baja o contenido que no cabe en una pantalla | Capa base, sin descargar three.js |
+| three.js no carga, no pasa el SRI o tarda más de 8 s | Capa base con un aviso discreto |
+| Sin GPU (pintado por software) o contexto WebGL perdido | Capa base con un aviso discreto |
+
+three.js va fijado en `0.159.0`, el último con un archivo único para `<script>`, con integridad SRI;
+si jsDelivr falla se intenta unpkg. Para actualizarlo hay que recalcular el hash en `escena.js`.
+
+El guion está en fracciones de scroll: la esfera entre 0,18 y 0,44, las constelaciones entre 0,62 y
+0,84. El giro se aplica en el sombreador antes del último `mix`, para que las constelaciones
+aterricen sin rotar sobre su enlace, y esquivan los rectángulos del texto para no afectar el contraste.
