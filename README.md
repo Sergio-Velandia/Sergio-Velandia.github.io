@@ -18,8 +18,9 @@ HTML y CSS planos, sin build ni framework. La escena 3D usa three.js desde CDN y
 opcional: si no carga, si el navegador no tiene WebGL o si hay `prefers-reduced-motion`, la página
 funciona igual y se lee entera.
 
-Para verlo en local basta con abrir `index.html`, o servir la carpeta con cualquier servidor
-estático.
+Para verlo en local hay que servir la carpeta con cualquier servidor estático, por ejemplo
+`npx serve`. Abierto directamente, `index.html` no carga el CSS ni las fuentes, porque usa rutas
+absolutas.
 
 ## Ojo al tocar este repo
 
@@ -28,7 +29,8 @@ Es el **repo de usuario**: sirve la raíz del dominio y es donde vive el `CNAME`
 - No borres ni edites el `CNAME`: sin él se cae el dominio completo, con los cuatro proyectos dentro.
 - No crees carpetas llamadas `Moss`, `Moss-Nexus`, `Moss-Taste` ni `mi-portafolio`: esas rutas las
   sirven sus propios repos.
-- El `404.html` de aquí atiende cualquier ruta equivocada de todo el dominio, no solo de esta página.
+- El `404.html` de aquí atiende las rutas equivocadas de la raíz. Dentro de `/mi-portafolio/`, `/Moss/`,
+  `/Moss-Nexus/` y `/Moss-Taste/` responde el 404 de cada proyecto.
 
 ## Notas técnicas
 
@@ -76,4 +78,5 @@ aterricen sin rotar sobre su enlace, y esquivan los rectángulos del texto para 
 
 ## Licencia
 
-MIT. Ver [LICENSE](LICENSE).
+MIT para el código. Los textos, las imágenes y la marca personal no están cubiertos, y las fuentes de
+`assets/fonts/` tienen su propia licencia SIL OFL. Ver [LICENSE](LICENSE).
