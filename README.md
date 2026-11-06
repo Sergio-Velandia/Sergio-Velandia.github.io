@@ -1,19 +1,42 @@
-# Sergio-Velandia.github.io
+# sergio-velandia.github.io
 
-Página de recepción de [sergio-velandia.dev](https://sergio-velandia.dev/): quién soy y cuatro enlaces
-a los proyectos. HTML y CSS planos, sin build ni framework, porque esta página está delante de las
-otras cuatro y tiene que ser la más difícil de romper del dominio.
+Página de recepción de **[sergio-velandia.dev](https://sergio-velandia.dev)**. Dice quién soy y
+reparte hacia mis cuatro proyectos. No tiene backend, ni cuentas, ni formulario.
 
-## Lo que no se puede romper
+## A dónde lleva
 
-- **No tocar `CNAME`.** Sin él se cae el dominio entero, con los cuatro proyectos dentro.
-- **Ninguna carpeta llamada** `Moss`, `Moss-Nexus`, `Moss-Taste` ni `mi-portafolio`: esas rutas las
-  sirve GitHub Pages desde sus propios repos.
-- **`robots.txt` se amplía, no se reescribe:** declara los sitemaps de todos los sitios.
-- **Rutas absolutas en `404.html`:** se sirve desde cualquier profundidad.
-- **Todo lo que esté en este repo se publica.** Los documentos de trabajo no van aquí.
+| | |
+|---|---|
+| [Portafolio](https://sergio-velandia.dev/mi-portafolio/) | Quién soy y qué he construido |
+| [Moss](https://sergio-velandia.dev/Moss/) | Componentes, bitácora y rutas de aprendizaje |
+| [Moss Nexus](https://sergio-velandia.dev/Moss-Nexus/) | Flujos de n8n listos para copiar |
+| [Moss Taste](https://sergio-velandia.dev/Moss-Taste/) | Recetario con cálculo de porciones y costo |
 
-## Tokens
+## Cómo está hecho
+
+HTML y CSS planos, sin build ni framework. La escena 3D usa three.js desde CDN y es una capa
+opcional: si no carga, si el navegador no tiene WebGL o si hay `prefers-reduced-motion`, la página
+funciona igual y se lee entera.
+
+Para verlo en local basta con abrir `index.html`, o servir la carpeta con cualquier servidor
+estático.
+
+## Ojo al tocar este repo
+
+Es el **repo de usuario**: sirve la raíz del dominio y es donde vive el `CNAME`.
+
+- No borres ni edites el `CNAME`: sin él se cae el dominio completo, con los cuatro proyectos dentro.
+- No crees carpetas llamadas `Moss`, `Moss-Nexus`, `Moss-Taste` ni `mi-portafolio`: esas rutas las
+  sirven sus propios repos.
+- El `404.html` de aquí atiende cualquier ruta equivocada de todo el dominio, no solo de esta página.
+
+## Notas técnicas
+
+- `robots.txt` se amplía, no se reescribe: declara los sitemaps de todos los sitios.
+- `404.html` usa rutas absolutas porque se sirve desde cualquier profundidad.
+- Todo lo que esté en este repo se publica: los documentos de trabajo no van aquí.
+
+### Tokens
 
 Oro y grafito, los del portafolio; el hub no inventa color propio. Viven en `assets/hub.css`.
 
@@ -26,12 +49,12 @@ Oro y grafito, los del portafolio; el hub no inventa color propio. Viven en `ass
 
 Fuentes autoalojadas: Syne 800 y DM Sans 400/500, ambas con licencia SIL OFL (`assets/fonts/`).
 
-## Movimiento
+### Movimiento
 
 Un solo gesto: al pasar el cursor o enfocar, una copia en oro de la fila se revela con `clip-path`
 (280 ms al entrar, 170 ms al salir). Con `prefers-reduced-motion` pasa a un fundido de 150 ms.
 
-## Escena 3D
+### Escena 3D
 
 `assets/escena.js` es lo único que activa los capítulos dirigidos por scroll. Se carga en el `<head>`
 para hacerlo antes del primer pintado. Sin esa clase, la página es la capa base de arriba.
@@ -50,3 +73,7 @@ si jsDelivr falla se intenta unpkg. Para actualizarlo hay que recalcular el hash
 El guion está en fracciones de scroll: la esfera entre 0,18 y 0,44, las constelaciones entre 0,62 y
 0,84. El giro se aplica en el sombreador antes del último `mix`, para que las constelaciones
 aterricen sin rotar sobre su enlace, y esquivan los rectángulos del texto para no afectar el contraste.
+
+## Licencia
+
+MIT. Ver [LICENSE](LICENSE).
