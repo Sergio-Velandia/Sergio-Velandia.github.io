@@ -1,0 +1,318 @@
+/* Hub · sergio-velandia.dev
+   Oro y grafito, los mismos valores del portafolio: el hub es la puerta, no una habitación.
+   Rutas siempre absolutas: el 404 se sirve desde cualquier profundidad. */
+
+@font-face {
+  font-family: "Syne";
+  src: url("/assets/fonts/syne-latin-800-normal.woff2") format("woff2");
+  font-weight: 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("/assets/fonts/dm-sans-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("/assets/fonts/dm-sans-latin-500-normal.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+
+  --bg-base: #0a0a09;
+  --text-primary: #f5f2ec;
+  --text-secondary: #a8a49a;
+  --accent: #c9a96e;
+  --line: rgb(245 242 236 / 0.18);
+
+  --font-display: "Syne", "Arial Black", system-ui, sans-serif;
+  --font-body: "DM Sans", system-ui, "Segoe UI", Roboto, sans-serif;
+
+  --gutter: clamp(1rem, 3.4vw, 3.5rem);
+  --space-s: 0.75rem;
+  --space-m: 1.25rem;
+  --fila: 0.75rem; /* la franja sobresale esto para que el texto alinee con el titular */
+  --space-l: clamp(2rem, 3.6vh, 3rem);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-in: 280ms;
+  --dur-out: 170ms; /* lo que sale se quita de en medio rápido */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  padding-inline: max(var(--gutter), env(safe-area-inset-left)) max(var(--gutter), env(safe-area-inset-right));
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font: 400 1.0625rem/1.6 var(--font-body);
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: clamp(1.75rem, 4.5vh, 4rem);
+}
+
+h1,
+h2,
+p,
+ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--text-primary);
+  outline-offset: 3px;
+}
+
+.oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Capítulo I · El nombre */
+
+.nombre h1 {
+  font: 800 13vw/0.98 var(--font-display);
+  letter-spacing: -0.035em;
+}
+
+.nombre p {
+  margin-top: var(--space-m);
+  color: var(--text-secondary);
+}
+
+/* Capítulo II · Quién soy */
+
+.quien {
+  display: grid;
+  gap: var(--space-s);
+  margin-top: var(--space-l);
+}
+
+.linea {
+  font: 800 clamp(1.5rem, 2.25vw, 2.25rem)/1.15 var(--font-display);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.parrafo {
+  max-width: 34rem;
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+
+/* Capítulo III · A dónde ir */
+
+.destinos {
+  margin-top: var(--space-l);
+  margin-inline: calc(var(--fila) * -1);
+  border-bottom: 1px solid var(--line);
+}
+
+.destinos li {
+  border-top: 1px solid var(--line);
+}
+
+.destino {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+.capa {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1rem var(--fila);
+}
+
+/* La copia en oro se revela con una máscara: el texto se invierte justo en el borde del
+   barrido, así que el contraste se mantiene en todos los fotogramas. */
+.capa--oro {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  color: var(--bg-base);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--dur-out) var(--ease-out);
+  pointer-events: none;
+}
+
+.destino:focus-visible .capa--oro,
+.destino:active .capa--oro {
+  clip-path: inset(0);
+  transition-duration: var(--dur-in);
+}
+
+@media (hover: hover) {
+  .destino:hover .capa--oro {
+    clip-path: inset(0);
+    transition-duration: var(--dur-in);
+  }
+}
+
+/* El foco siempre cae sobre la franja en oro, y la franja se pinta encima del enlace:
+   el anillo va en ella. El del enlace queda transparente para el modo de alto contraste. */
+.destino:focus-visible {
+  outline-color: transparent;
+}
+
+.destino:focus-visible .capa--oro {
+  outline: 3px solid var(--bg-base);
+  outline-offset: -7px;
+}
+
+.destino__nombre {
+  font: 800 clamp(1.625rem, 3.1vw, 2.75rem)/1.1 var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.destino__texto {
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-wrap: pretty;
+}
+
+.capa--oro .destino__texto {
+  color: inherit;
+}
+
+.destino--principal .capa:not(.capa--oro) .destino__nombre {
+  color: var(--accent);
+}
+
+.destino--principal .destino__nombre {
+  font-size: clamp(2.25rem, 4.6vw, 4rem);
+}
+
+/* En táctil no hay hover: el subrayado dice que son enlaces. */
+@media (hover: none) {
+  .capa:not(.capa--oro) .destino__nombre {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.16em;
+    text-decoration-color: var(--text-secondary);
+  }
+}
+
+/* Pie */
+
+.pie {
+  padding-block: var(--space-m) calc(var(--space-m) + env(safe-area-inset-bottom));
+}
+
+.pie ul {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1.5rem;
+}
+
+.pie a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  touch-action: manipulation;
+  transition: color var(--dur-out) linear;
+}
+
+.pie a:hover {
+  color: var(--text-primary);
+}
+
+/* Tablet en adelante: nombre más contenido por ancho y por alto, filas en dos columnas. */
+
+@media (min-width: 48rem) {
+  .nombre h1 {
+    font-size: clamp(3.5rem, min(7.8vw, 11.5vh), 7.5rem);
+  }
+
+  .quien {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+    gap: var(--space-m) 2rem;
+  }
+
+  .capa {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: baseline;
+    column-gap: 2rem;
+    padding: clamp(0.75rem, 1.7vh, 1.125rem) var(--fila);
+  }
+}
+
+/* Movimiento reducido: sin barrido, un fundido corto que sigue comunicando. */
+
+@media (prefers-reduced-motion: reduce) {
+  .capa--oro {
+    clip-path: none;
+    opacity: 0;
+    transition: opacity 150ms linear;
+  }
+
+  .destino:focus-visible .capa--oro,
+  .destino:active .capa--oro {
+    clip-path: none;
+    opacity: 1;
+    transition-duration: 150ms;
+  }
+
+  @media (hover: hover) {
+    .destino:hover .capa--oro {
+      clip-path: none;
+      opacity: 1;
+      transition-duration: 150ms;
+    }
+  }
+}
+
+/* Alto contraste del sistema: los fondos desaparecen, así que la copia sobra. */
+
+@media (forced-colors: active) {
+  .capa--oro {
+    display: none;
+  }
+
+  .destino:focus-visible {
+    outline-color: Highlight;
+    outline-offset: 3px;
+  }
+}
