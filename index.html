@@ -2,11 +2,11 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sergio Ramírez Velandia</title>
-  <meta name="description" content="Construyo, documento y vuelvo a usar. Cuatro proyectos públicos en un solo dominio.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Sergio Velandia · Automatización con n8n</title>
+  <meta name="description" content="Automatizo lo que hoy se hace a mano. Flujos de n8n probados y aplicaciones web con React y Firebase.">
   <link rel="canonical" href="https://sergio-velandia.dev/">
-  <meta name="theme-color" content="#0a0a09">
+  <meta name="theme-color" content="#0b0d12">
 
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_CO">
@@ -29,60 +29,449 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/syne-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/hub.css">
-  <script src="/assets/escena.js"></script>
+  <link rel="preload" href="/assets/fonts/dm-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/flujo.css">
+  <script>
+    /* Activa el flujo dirigido por scroll antes del primer pintado. Sin JavaScript, con movimiento
+       reducido o en una ventana muy baja, la página se queda en su capa base: todo ejecutado y apilado.
+       Si flujo.js no arranca en 5 s, se vuelve a la base. */
+    (function () {
+      var raiz = document.documentElement;
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches || innerHeight < 560) return;
+      raiz.classList.add("flujo-activo");
+      setTimeout(function () { if (!window.__flujo) raiz.classList.remove("flujo-activo"); }, 5000);
+    })();
+  </script>
+  <script src="/assets/vendor/gsap/gsap.min.js" defer onerror="document.documentElement.classList.remove('flujo-activo')"></script>
+  <script src="/assets/vendor/gsap/ScrollTrigger.min.js" defer onerror="document.documentElement.classList.remove('flujo-activo')"></script>
+  <script src="/assets/flujo.js" defer onerror="document.documentElement.classList.remove('flujo-activo')"></script>
 </head>
 <body>
-  <main>
-    <section class="nombre" id="nombre">
-      <h1>Sergio Ramírez Velandia</h1>
-      <p>Desarrollador full-stack en Bogotá, Colombia</p>
-      <p class="seguir">Baja para ver más, o <a href="#destinos">salta a los proyectos</a>.</p>
-    </section>
+  <a class="saltar" href="#hablemos">Saltar al contacto</a>
+  <div class="progreso" aria-hidden="true"></div>
 
-    <section class="quien" id="quien">
-      <p class="linea">Construyo, documento y vuelvo a usar.</p>
-      <p class="parrafo">Un jardín digital donde lo que aprendo queda documentado y listo para volver a usar. Lo que no está probado, lo digo.</p>
-    </section>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-rayo" viewBox="0 0 24 24"><path d="M13 2.5 4.5 13.5H11l-1 8 8.5-11.5H12z"/></symbol>
+    <symbol id="i-reparte" viewBox="0 0 24 24"><path d="M3 12h6M9 12c4 0 5-6.5 11-6.5M9 12h11M9 12c4 0 5 6.5 11 6.5"/></symbol>
+    <symbol id="i-hoja" viewBox="0 0 24 24"><path d="M5 19.5C5 10.5 11 4.5 20 4.5c0 9-6 15-15 15z"/><path d="m5 19.5 8-8"/></symbol>
+    <symbol id="i-olla" viewBox="0 0 24 24"><path d="M2.5 11h19"/><path d="M4.5 11v2.5c0 3.6 3.4 6 7.5 6s7.5-2.4 7.5-6V11"/><path d="M9 3.5c-1 1.4 1 2.4 0 4M15 3.5c-1 1.4 1 2.4 0 4"/></symbol>
+    <symbol id="i-une" viewBox="0 0 24 24"><path d="M4 5.5c6 0 6 6.5 10 6.5M4 12h10M4 18.5c6 0 6-6.5 10-6.5M14 12h6M17 9l3 3-3 3"/></symbol>
+    <symbol id="i-sobre" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></symbol>
+  </svg>
 
-    <section class="destinos" id="destinos" aria-labelledby="destinos-titulo">
-      <h2 class="oculto" id="destinos-titulo">A dónde ir</h2>
-      <ul>
-        <li>
-          <a class="destino destino--principal" href="/mi-portafolio/">
-            <span class="capa"><span class="destino__nombre">Portafolio</span> <span class="destino__texto">Quién soy y qué he construido. Empieza aquí.</span></span>
-            <span class="capa capa--oro" aria-hidden="true"><span class="destino__nombre">Portafolio</span> <span class="destino__texto">Quién soy y qué he construido. Empieza aquí.</span></span>
-          </a>
-        </li>
-        <li>
-          <a class="destino" href="/Moss/">
-            <span class="capa"><span class="destino__nombre" translate="no">Moss</span> <span class="destino__texto">Componentes que se ven funcionando, bitácora y rutas de aprendizaje.</span></span>
-            <span class="capa capa--oro" aria-hidden="true"><span class="destino__nombre" translate="no">Moss</span> <span class="destino__texto">Componentes que se ven funcionando, bitácora y rutas de aprendizaje.</span></span>
-          </a>
-        </li>
-        <li>
-          <a class="destino" href="/Moss-Nexus/">
-            <span class="capa"><span class="destino__nombre" translate="no">Moss Nexus</span> <span class="destino__texto">Flujos de n8n probados uno por uno, listos para copiar.</span></span>
-            <span class="capa capa--oro" aria-hidden="true"><span class="destino__nombre" translate="no">Moss Nexus</span> <span class="destino__texto">Flujos de n8n probados uno por uno, listos para copiar.</span></span>
-          </a>
-        </li>
-        <li>
-          <a class="destino" href="/Moss-Taste/">
-            <span class="capa"><span class="destino__nombre" translate="no">Moss Taste</span> <span class="destino__texto">Recetario familiar que calcula ingredientes y costo por porciones.</span></span>
-            <span class="capa capa--oro" aria-hidden="true"><span class="destino__nombre" translate="no">Moss Taste</span> <span class="destino__texto">Recetario familiar que calcula ingredientes y costo por porciones.</span></span>
-          </a>
-        </li>
-      </ul>
-    </section>
+  <main id="flujo">
+    <div class="escenario">
+      <div class="izquierda">
+        <header class="portada">
+          <p class="ojal"><span class="punto" aria-hidden="true"></span>Flujo activo · hola-soy-sergio</p>
+          <h1><span class="nombre">Sergio Velandia.</span> <span class="oro">Automatizo lo que hoy se hace a mano.</span></h1>
+          <p class="entrada">Flujos de n8n probados en instancias reales y aplicaciones web con React, TypeScript y Firebase. Busco contrato de aprendizaje en Bogotá.</p>
+          <div class="acciones">
+            <button class="boton boton--primario" id="ejecutar" type="button" hidden>▶ Ejecutar flujo</button>
+            <a class="boton" href="/Moss-Nexus/">Ir a Moss Nexus</a>
+          </div>
+        </header>
+
+        <section class="editor" aria-labelledby="editor-titulo">
+          <h2 class="oculto" id="editor-titulo">El flujo</h2>
+          <div class="barra-editor">
+            <span class="nombre-flujo" translate="no">hola-soy-sergio.json</span>
+            <span class="estado" id="estado"><b>✓ Ejecución exitosa · 8 nodos, 0 errores</b></span>
+          </div>
+          <div class="lienzo">
+    <!-- grafo:horizontal -->
+    <svg class="grafo grafo--horizontal" viewBox="0 0 1200 450" data-ancho="1200" data-alto="450" role="group" aria-labelledby="gh-titulo" aria-describedby="gh-desc">
+      <title id="gh-titulo">Flujo de n8n: hola-soy-sergio</title>
+      <desc id="gh-desc">Un disparador, «Cuando llegas», lleva a Moss Nexus, mi fuerte. Un Switch reparte hacia Moss, Moss Taste y el portafolio; las tres ramas se unen en un Merge y el flujo termina en «Hablemos», el contacto. Cada nodo es un enlace a su panel.</desc>
+      <g class="aristas">
+        <path class="arista" d="M132,215 C172,215 172,215 212,215"/>
+        <path class="arista" d="M388,215 C430.5,215 430.5,215 473,215"/>
+        <path class="arista" d="M577,215 C630,215 630,80 683,80"/>
+        <path class="arista" d="M577,215 C630,215 630,215 683,215"/>
+        <path class="arista" d="M577,215 C630,215 630,350 683,350"/>
+        <path class="arista" d="M787,80 C837.5,80 837.5,215 888,215"/>
+        <path class="arista" d="M787,215 C837.5,215 837.5,215 888,215"/>
+        <path class="arista" d="M787,350 C837.5,350 837.5,215 888,215"/>
+        <path class="arista" d="M992,215 C1030,215 1030,215 1068,215"/>
+        <path class="arista-on" data-arista="t>nx" d="M132,215 C172,215 172,215 212,215"/>
+        <path class="arista-on" data-arista="nx>sw" d="M388,215 C430.5,215 430.5,215 473,215"/>
+        <path class="arista-on" data-arista="sw>mo" d="M577,215 C630,215 630,80 683,80"/>
+        <path class="arista-on" data-arista="sw>ta" d="M577,215 C630,215 630,215 683,215"/>
+        <path class="arista-on" data-arista="sw>pf" d="M577,215 C630,215 630,350 683,350"/>
+        <path class="arista-on" data-arista="mo>mg" d="M787,80 C837.5,80 837.5,215 888,215"/>
+        <path class="arista-on" data-arista="ta>mg" d="M787,215 C837.5,215 837.5,215 888,215"/>
+        <path class="arista-on" data-arista="pf>mg" d="M787,350 C837.5,350 837.5,215 888,215"/>
+        <path class="arista-on" data-arista="mg>em" d="M992,215 C1030,215 1030,215 1068,215"/>
+      </g>
+      <g class="rotulos">
+        <text class="items" data-arista="t>nx" x="172" y="203" text-anchor="middle">1 item</text>
+        <text class="items" data-arista="nx>sw" x="430.5" y="203" text-anchor="middle">3 items</text>
+        <text class="items" data-arista="sw>mo" x="630" y="135.5" text-anchor="middle">1 item</text>
+        <text class="items" data-arista="sw>ta" x="630" y="203" text-anchor="middle">1 item</text>
+        <text class="items" data-arista="sw>pf" x="630" y="270.5" text-anchor="middle">1 item</text>
+        <text class="items" data-arista="mo>mg" x="837.5" y="135.5" text-anchor="middle">1 item</text>
+        <text class="items" data-arista="ta>mg" x="837.5" y="203" text-anchor="middle">1 item</text>
+        <text class="items" data-arista="pf>mg" x="837.5" y="270.5" text-anchor="middle">1 item</text>
+        <text class="items" data-arista="mg>em" x="1030" y="203" text-anchor="middle">3 items</text>
+      </g>
+      <g class="paquetes"></g>
+      <g class="nodos">
+      <a class="nodo on" href="#hola" data-id="t" data-at="0" data-cx="80" data-cy="215" data-w="104" data-h="72" aria-label="Cuando llegas, el disparador del flujo. Ver su salida" id="gh-t">
+        <g transform="translate(28,179)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <use class="icono" href="#i-rayo" x="37" y="21" width="30" height="30"/>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Cuando llegas</text>
+          <text class="sub" x="52" y="116" text-anchor="middle">Webhook</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on nodo--estrella" href="#moss-nexus" data-id="nx" data-at="1" data-cx="300" data-cy="215" data-w="176" data-h="108" aria-label="Moss Nexus, mi fuerte. Ver su salida" id="gh-nx">
+        <g transform="translate(212,161)">
+          <rect class="caja" width="176" height="108" rx="14"/>
+          <rect class="corre" width="176" height="108" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="190" height="122" rx="19"/>
+          <text class="icono-texto icono-texto--grande" x="88" y="63" text-anchor="middle">n8n</text>
+          <text class="etiqueta" x="88" y="132" text-anchor="middle">Moss Nexus</text>
+          <text class="sub" x="88" y="152" text-anchor="middle" data-dato="nexus.plantillas" data-formato="{v} plantillas">13 plantillas</text>
+          <rect class="cinta" x="44" y="-13" width="88" height="24" rx="12"/><text class="cinta-texto" x="88" y="3.5" text-anchor="middle">MI FUERTE</text>
+          <g class="check" transform="translate(172,16)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on" href="#moss" data-id="sw" data-at="1.5" data-cx="525" data-cy="215" data-w="104" data-h="72" aria-label="Switch: reparte hacia Moss, Moss Taste y el portafolio. Ir a la primera ruta" id="gh-sw">
+        <g transform="translate(473,179)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <use class="icono" href="#i-reparte" x="37" y="21" width="30" height="30"/>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Switch</text>
+          <text class="sub" x="52" y="116" text-anchor="middle">3 rutas</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on" href="#moss" data-id="mo" data-at="2" data-cx="735" data-cy="80" data-w="104" data-h="72" aria-label="Moss. Ver su salida" id="gh-mo">
+        <g transform="translate(683,44)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <use class="icono" href="#i-hoja" x="37" y="21" width="30" height="30"/>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Moss</text>
+          <text class="sub" x="52" y="116" text-anchor="middle" data-dato="moss.version" data-formato="v{v}">v1.20.0</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on" href="#moss-taste" data-id="ta" data-at="3" data-cx="735" data-cy="215" data-w="104" data-h="72" aria-label="Moss Taste. Ver su salida" id="gh-ta">
+        <g transform="translate(683,179)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <use class="icono" href="#i-olla" x="37" y="21" width="30" height="30"/>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Moss Taste</text>
+          <text class="sub" x="52" y="116" text-anchor="middle" data-dato="taste.version" data-formato="v{v}">v1.1.1</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on" href="#portafolio" data-id="pf" data-at="4" data-cx="735" data-cy="350" data-w="104" data-h="72" aria-label="Portafolio. Ver su salida" id="gh-pf">
+        <g transform="translate(683,314)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <text class="icono-texto" x="52" y="43" text-anchor="middle">SV</text>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Portafolio</text>
+          <text class="sub" x="52" y="116" text-anchor="middle" data-dato="portafolio.version" data-formato="v{v}">v1.2.3</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on" href="#hablemos" data-id="mg" data-at="4.5" data-cx="940" data-cy="215" data-w="104" data-h="72" aria-label="Merge: une las tres ramas. Ir al final del flujo" id="gh-mg">
+        <g transform="translate(888,179)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <use class="icono" href="#i-une" x="37" y="21" width="30" height="30"/>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Merge</text>
+          <text class="sub" x="52" y="116" text-anchor="middle">Une 3 ramas</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on" href="#hablemos" data-id="em" data-at="5" data-cx="1120" data-cy="215" data-w="104" data-h="72" aria-label="Hablemos, el contacto. Ver su salida" id="gh-em">
+        <g transform="translate(1068,179)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <use class="icono" href="#i-sobre" x="37" y="21" width="30" height="30"/>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Hablemos</text>
+          <text class="sub" x="52" y="116" text-anchor="middle">Correo</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      </g>
+    </svg>
+    <!-- /grafo:horizontal -->
+    <!-- grafo:vertical -->
+    <svg class="grafo grafo--vertical" viewBox="0 0 400 1110" data-ancho="400" data-alto="1110" role="group" aria-labelledby="gv-titulo" aria-describedby="gv-desc">
+      <title id="gv-titulo">Flujo de n8n: hola-soy-sergio</title>
+      <desc id="gv-desc">Un disparador, «Cuando llegas», lleva a Moss Nexus, mi fuerte. Un Switch reparte hacia Moss, Moss Taste y el portafolio; las tres ramas se unen en un Merge y el flujo termina en «Hablemos», el contacto. Cada nodo es un enlace a su panel.</desc>
+      <g class="aristas">
+        <path class="arista" d="M200,148 C200,163 200,163 200,178"/>
+        <path class="arista" d="M200,356 C200,377 200,377 200,398"/>
+        <path class="arista" d="M200,528 C200,573 70,573 70,618"/>
+        <path class="arista" d="M200,528 C200,573 200,573 200,618"/>
+        <path class="arista" d="M200,528 C200,573 330,573 330,618"/>
+        <path class="arista" d="M70,748 C70,778 200,778 200,808"/>
+        <path class="arista" d="M200,748 C200,778 200,778 200,808"/>
+        <path class="arista" d="M330,748 C330,778 200,778 200,808"/>
+        <path class="arista" d="M200,938 C200,953 200,953 200,968"/>
+        <path class="arista-on" data-arista="t>nx" d="M200,148 C200,163 200,163 200,178"/>
+        <path class="arista-on" data-arista="nx>sw" d="M200,356 C200,377 200,377 200,398"/>
+        <path class="arista-on" data-arista="sw>mo" d="M200,528 C200,573 70,573 70,618"/>
+        <path class="arista-on" data-arista="sw>ta" d="M200,528 C200,573 200,573 200,618"/>
+        <path class="arista-on" data-arista="sw>pf" d="M200,528 C200,573 330,573 330,618"/>
+        <path class="arista-on" data-arista="mo>mg" d="M70,748 C70,778 200,778 200,808"/>
+        <path class="arista-on" data-arista="ta>mg" d="M200,748 C200,778 200,778 200,808"/>
+        <path class="arista-on" data-arista="pf>mg" d="M330,748 C330,778 200,778 200,808"/>
+        <path class="arista-on" data-arista="mg>em" d="M200,938 C200,953 200,953 200,968"/>
+      </g>
+      <g class="rotulos">
+        <text class="items" data-arista="t>nx" x="208" y="167" text-anchor="start">1 item</text>
+        <text class="items" data-arista="nx>sw" x="208" y="381" text-anchor="start">3 items</text>
+        <text class="items" data-arista="sw>mo" x="143" y="577" text-anchor="start">1 item</text>
+        <text class="items" data-arista="sw>ta" x="208" y="577" text-anchor="start">1 item</text>
+        <text class="items" data-arista="sw>pf" x="273" y="577" text-anchor="start">1 item</text>
+        <text class="items" data-arista="mo>mg" x="143" y="782" text-anchor="start">1 item</text>
+        <text class="items" data-arista="ta>mg" x="208" y="782" text-anchor="start">1 item</text>
+        <text class="items" data-arista="pf>mg" x="273" y="782" text-anchor="start">1 item</text>
+        <text class="items" data-arista="mg>em" x="208" y="957" text-anchor="start">3 items</text>
+      </g>
+      <g class="paquetes"></g>
+      <g class="nodos">
+      <a class="nodo on" href="#hola" data-id="t" data-at="0" data-cx="200" data-cy="60" data-w="104" data-h="72" aria-label="Cuando llegas, el disparador del flujo. Ver su salida" id="gv-t">
+        <g transform="translate(148,24)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <use class="icono" href="#i-rayo" x="37" y="21" width="30" height="30"/>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Cuando llegas</text>
+          <text class="sub" x="52" y="116" text-anchor="middle">Webhook</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on nodo--estrella" href="#moss-nexus" data-id="nx" data-at="1" data-cx="200" data-cy="250" data-w="176" data-h="108" aria-label="Moss Nexus, mi fuerte. Ver su salida" id="gv-nx">
+        <g transform="translate(112,196)">
+          <rect class="caja" width="176" height="108" rx="14"/>
+          <rect class="corre" width="176" height="108" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="190" height="122" rx="19"/>
+          <text class="icono-texto icono-texto--grande" x="88" y="63" text-anchor="middle">n8n</text>
+          <text class="etiqueta" x="88" y="132" text-anchor="middle">Moss Nexus</text>
+          <text class="sub" x="88" y="152" text-anchor="middle" data-dato="nexus.plantillas" data-formato="{v} plantillas">13 plantillas</text>
+          <rect class="cinta" x="44" y="-13" width="88" height="24" rx="12"/><text class="cinta-texto" x="88" y="3.5" text-anchor="middle">MI FUERTE</text>
+          <g class="check" transform="translate(172,16)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on" href="#moss" data-id="sw" data-at="1.5" data-cx="200" data-cy="440" data-w="104" data-h="72" aria-label="Switch: reparte hacia Moss, Moss Taste y el portafolio. Ir a la primera ruta" id="gv-sw">
+        <g transform="translate(148,404)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <use class="icono" href="#i-reparte" x="37" y="21" width="30" height="30"/>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Switch</text>
+          <text class="sub" x="52" y="116" text-anchor="middle">3 rutas</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on" href="#moss" data-id="mo" data-at="2" data-cx="70" data-cy="660" data-w="104" data-h="72" aria-label="Moss. Ver su salida" id="gv-mo">
+        <g transform="translate(18,624)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <use class="icono" href="#i-hoja" x="37" y="21" width="30" height="30"/>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Moss</text>
+          <text class="sub" x="52" y="116" text-anchor="middle" data-dato="moss.version" data-formato="v{v}">v1.20.0</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on" href="#moss-taste" data-id="ta" data-at="3" data-cx="200" data-cy="660" data-w="104" data-h="72" aria-label="Moss Taste. Ver su salida" id="gv-ta">
+        <g transform="translate(148,624)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <use class="icono" href="#i-olla" x="37" y="21" width="30" height="30"/>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Moss Taste</text>
+          <text class="sub" x="52" y="116" text-anchor="middle" data-dato="taste.version" data-formato="v{v}">v1.1.1</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on" href="#portafolio" data-id="pf" data-at="4" data-cx="330" data-cy="660" data-w="104" data-h="72" aria-label="Portafolio. Ver su salida" id="gv-pf">
+        <g transform="translate(278,624)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <text class="icono-texto" x="52" y="43" text-anchor="middle">SV</text>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Portafolio</text>
+          <text class="sub" x="52" y="116" text-anchor="middle" data-dato="portafolio.version" data-formato="v{v}">v1.2.3</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on" href="#hablemos" data-id="mg" data-at="4.5" data-cx="200" data-cy="850" data-w="104" data-h="72" aria-label="Merge: une las tres ramas. Ir al final del flujo" id="gv-mg">
+        <g transform="translate(148,814)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <use class="icono" href="#i-une" x="37" y="21" width="30" height="30"/>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Merge</text>
+          <text class="sub" x="52" y="116" text-anchor="middle">Une 3 ramas</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      <a class="nodo on" href="#hablemos" data-id="em" data-at="5" data-cx="200" data-cy="1010" data-w="104" data-h="72" aria-label="Hablemos, el contacto. Ver su salida" id="gv-em">
+        <g transform="translate(148,974)">
+          <rect class="caja" width="104" height="72" rx="14"/>
+          <rect class="corre" width="104" height="72" rx="14" pathLength="100"/>
+          <rect class="foco" x="-7" y="-7" width="118" height="86" rx="19"/>
+          <use class="icono" href="#i-sobre" x="37" y="21" width="30" height="30"/>
+          <text class="etiqueta" x="52" y="96" text-anchor="middle">Hablemos</text>
+          <text class="sub" x="52" y="116" text-anchor="middle">Correo</text>
+          
+          <g class="check" transform="translate(100,-4)"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+        </g>
+      </a>
+      </g>
+    </svg>
+    <!-- /grafo:vertical -->
+          </div>
+        </section>
+      </div>
+
+      <div class="paneles" id="paneles">
+        <article class="paso" id="hola" data-paso="0" aria-labelledby="titulo-hola">
+          <div class="cabeza"><span>Webhook · Cuando llegas</span><b>1 item</b></div>
+          <div class="cuerpo">
+            <h2 id="titulo-hola">Hola, soy Sergio</h2>
+            <p>Estudio Tecnología en Desarrollo de Software y me dedico a que las tareas repetitivas se hagan solas. Haz scroll: este flujo se ejecuta contigo.</p>
+<pre class="json json--siempre"><code>{
+  <span class="k">"nombre"</span>: <span class="s">"Sergio Andrés Ramírez Velandia"</span>,
+  <span class="k">"rol"</span>: <span class="s">"Automatización con n8n · Full-Stack"</span>,
+  <span class="k">"ciudad"</span>: <span class="s">"Bogotá"</span>,
+  <span class="k">"busca"</span>: <span class="s">"Contrato de aprendizaje"</span>
+}</code></pre>
+          </div>
+        </article>
+
+        <article class="paso paso--estrella" id="moss-nexus" data-paso="1" aria-labelledby="titulo-nexus">
+          <div class="cabeza"><span>Moss Nexus · nodo principal</span><b>3 items</b></div>
+          <div class="cuerpo">
+            <p class="insignia">Mi fuerte</p>
+            <h2 id="titulo-nexus" translate="no">Moss Nexus</h2>
+            <p>Flujos de n8n listos para copiar. Nueve de los trece, probados en una instancia real de n8n, con sus limitaciones escritas.</p>
+            <dl class="cifras">
+              <div><dt>plantillas</dt><dd data-dato="nexus.plantillas">13</dd></div>
+              <div><dt>probadas en n8n</dt><dd data-dato="nexus.probadas">9</dd></div>
+              <div><dt>versión estable</dt><dd data-dato="nexus.version">1.2.0</dd></div>
+            </dl>
+            <figure class="navegador">
+              <div class="barra-navegador" aria-hidden="true"><i></i><i></i><i></i><span>sergio-velandia.dev/Moss-Nexus/</span></div>
+              <div class="vista">
+                <img src="/assets/previews/moss-nexus-640.webp" srcset="/assets/previews/moss-nexus-640.webp 640w, /assets/previews/moss-nexus-1280.webp 1280w" sizes="(min-width: 56.25rem) 40vw, 92vw" width="1280" height="800" loading="lazy" decoding="async" alt="Portada de Moss Nexus: el titular «Del problema al flujo en minutos», un buscador de plantillas y las cifras 13 plantillas, 9 probadas en n8n, 7 categorías y 9 apps conectadas.">
+                <a class="abrir" href="/Moss-Nexus/">Abrir Moss Nexus</a>
+              </div>
+            </figure>
+          </div>
+        </article>
+
+        <article class="paso" id="moss" data-paso="2" aria-labelledby="titulo-moss">
+          <div class="cabeza"><span>Switch → Moss</span><b>1 item</b></div>
+          <div class="cuerpo">
+            <h2 id="titulo-moss" translate="no">Moss</h2>
+            <p>Mi jardín digital: guías, componentes en vivo, rutas de aprendizaje y una bitácora de lo que sale mal.</p>
+            <figure class="navegador">
+              <div class="barra-navegador" aria-hidden="true"><i></i><i></i><i></i><span>sergio-velandia.dev/Moss/</span></div>
+              <div class="vista">
+                <img src="/assets/previews/moss-640.webp" srcset="/assets/previews/moss-640.webp 640w, /assets/previews/moss-1280.webp 1280w" sizes="(min-width: 56.25rem) 40vw, 92vw" width="1280" height="800" loading="lazy" decoding="async" alt="Portada de Moss: «Tu jardín digital de código», un buscador y accesos a Rutas, Laboratorio, Manual, Bitácora, Proyectos y Herbario, junto a una gráfica del ritmo de crecimiento.">
+                <a class="abrir" href="/Moss/">Abrir Moss</a>
+              </div>
+            </figure>
+<pre class="json"><code>{ <span class="k">"versión"</span>: <span class="s" data-dato="moss.version" data-formato="&quot;{v}&quot;">"1.20.0"</span>, <span class="k">"estado"</span>: <span class="s" data-dato="moss.estado" data-formato="&quot;{v}&quot;">"estable"</span> }</code></pre>
+          </div>
+        </article>
+
+        <article class="paso" id="moss-taste" data-paso="3" aria-labelledby="titulo-taste">
+          <div class="cabeza"><span>Switch → Moss Taste</span><b>1 item</b></div>
+          <div class="cuerpo">
+            <h2 id="titulo-taste" translate="no">Moss Taste</h2>
+            <p>Recetario familiar con cuentas y Firestore. Te dice cuánto comprar y cuánto cuesta en COP para las porciones que vas a servir.</p>
+            <figure class="navegador">
+              <div class="barra-navegador" aria-hidden="true"><i></i><i></i><i></i><span>sergio-velandia.dev/Moss-Taste/</span></div>
+              <div class="vista">
+                <img src="/assets/previews/moss-taste-640.webp" srcset="/assets/previews/moss-taste-640.webp 640w, /assets/previews/moss-taste-1280.webp 1280w" sizes="(min-width: 56.25rem) 40vw, 92vw" width="1280" height="800" loading="lazy" decoding="async" alt="Portada de Moss Taste: «El recetario de la familia», con los botones Ver recetas y ¿Qué cocino hoy?, y tres recetas destacadas: ajiaco santafereño, arroz con leche y changua.">
+                <a class="abrir" href="/Moss-Taste/">Abrir Moss Taste</a>
+              </div>
+            </figure>
+<pre class="json"><code>{ <span class="k">"versión"</span>: <span class="s" data-dato="taste.version" data-formato="&quot;{v}&quot;">"1.1.1"</span>, <span class="k">"estado"</span>: <span class="s" data-dato="taste.estado" data-formato="&quot;{v}&quot;">"estable"</span> }</code></pre>
+          </div>
+        </article>
+
+        <article class="paso" id="portafolio" data-paso="4" aria-labelledby="titulo-portafolio">
+          <div class="cabeza"><span>Switch → Portafolio</span><b>1 item</b></div>
+          <div class="cuerpo">
+            <h2 id="titulo-portafolio">Portafolio</h2>
+            <p>Quién soy, qué he hecho y cómo contactarme, en español e inglés.</p>
+            <figure class="navegador">
+              <div class="barra-navegador" aria-hidden="true"><i></i><i></i><i></i><span>sergio-velandia.dev/mi-portafolio/</span></div>
+              <div class="vista">
+                <img src="/assets/previews/portafolio-640.webp" srcset="/assets/previews/portafolio-640.webp 640w, /assets/previews/portafolio-1280.webp 1280w" sizes="(min-width: 56.25rem) 40vw, 92vw" width="1280" height="800" loading="lazy" decoding="async" alt="Portada del portafolio: el nombre Sergio Velandia en letras grandes, «Desarrollador Web Full Stack» y los botones Contáctame, Descargar CV y Ver mi GitHub.">
+                <a class="abrir" href="/mi-portafolio/">Abrir el portafolio</a>
+              </div>
+            </figure>
+<pre class="json"><code>{ <span class="k">"versión"</span>: <span class="s" data-dato="portafolio.version" data-formato="&quot;{v}&quot;">"1.2.3"</span>, <span class="k">"estado"</span>: <span class="s" data-dato="portafolio.estado" data-formato="&quot;{v}&quot;">"en mantenimiento"</span> }</code></pre>
+          </div>
+        </article>
+
+        <article class="paso" id="hablemos" data-paso="5" aria-labelledby="titulo-hablemos">
+          <div class="cabeza"><span>Enviar correo · Hablemos</span><b>1 item</b></div>
+          <div class="cuerpo">
+            <h2 id="titulo-hablemos">¿Tu empresa todavía hace procesos a mano?</h2>
+            <p>Facturas que alguien copia a una hoja, alertas que nadie ve, reportes que se arman cada lunes. Cuéntame cuál y lo miramos.</p>
+<pre class="json json--siempre"><code>{
+  <span class="k">"para"</span>: <span class="s">"contacto@sergio-velandia.dev"</span>,
+  <span class="k">"linkedin"</span>: <span class="s">"/in/sergio-ramirezv"</span>,
+  <span class="k">"github"</span>: <span class="s">"Sergio-Velandia"</span>
+}</code></pre>
+            <div class="acciones">
+              <a class="boton boton--primario" href="mailto:contacto@sergio-velandia.dev">Escribirme</a>
+              <button class="boton" type="button" data-copiar="contacto@sergio-velandia.dev" hidden>Copiar correo</button>
+              <a class="boton" href="https://linkedin.com/in/sergio-ramirezv">LinkedIn</a>
+              <a class="boton" href="https://github.com/Sergio-Velandia">GitHub</a>
+            </div>
+            <p class="aviso-copia" role="status" aria-live="polite"></p>
+          </div>
+        </article>
+      </div>
+    </div>
   </main>
 
   <footer class="pie">
-    <ul>
-      <li><a href="mailto:contacto@sergio-velandia.dev">contacto@sergio-velandia.dev</a></li>
-      <li><a href="https://github.com/Sergio-Velandia">GitHub</a></li>
-      <li><a href="https://linkedin.com/in/sergio-ramirezv">LinkedIn</a></li>
-    </ul>
-    <p class="aviso" role="status" hidden>La animación 3D no está disponible aquí. La página funciona igual.</p>
+    <nav aria-label="Los cuatro proyectos">
+      <ul>
+        <li><a href="/Moss-Nexus/" translate="no">Moss Nexus</a></li>
+        <li><a href="/Moss/" translate="no">Moss</a></li>
+        <li><a href="/Moss-Taste/" translate="no">Moss Taste</a></li>
+        <li><a href="/mi-portafolio/">Portafolio</a></li>
+      </ul>
+    </nav>
+    <p>Hecho en Bogotá · <a href="mailto:contacto@sergio-velandia.dev">contacto@sergio-velandia.dev</a></p>
   </footer>
 </body>
 </html>

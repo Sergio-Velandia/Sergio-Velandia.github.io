@@ -1,0 +1,273 @@
+/* Hub · sergio-velandia.dev · «el hub es un flujo de n8n»
+   Capa base: todo el contenido apilado y el flujo ya ejecutado. Es lo que se ve sin JavaScript y con
+   movimiento reducido. La clase .flujo-activo (la pone el <head>) fija la escena y deja que el scroll
+   ejecute el flujo; si flujo.js no arranca, la clase se quita y se vuelve a esta base. */
+
+@font-face { font-family: "Syne"; src: url("/assets/fonts/syne-latin-800-normal.woff2") format("woff2"); font-weight: 800; font-display: swap; }
+@font-face { font-family: "DM Sans"; src: url("/assets/fonts/dm-sans-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "DM Sans"; src: url("/assets/fonts/dm-sans-latin-500-normal.woff2") format("woff2"); font-weight: 500 700; font-display: swap; }
+@font-face { font-family: "JetBrains Mono"; src: url("/assets/fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
+
+:root {
+  color-scheme: dark;
+
+  --fondo: #0b0d12;
+  --panel: #13161e;
+  --panel-2: #181c26;
+  --linea: #2a2f3c;
+  --texto: #f0ede8;
+  --texto-2: #a3a6af;        /* 7,1:1 sobre --panel */
+  --oro: #c9a96e;
+  --oro-2: #e6c78f;
+  --ok: #6fcf97;
+  --clave: #e8b86e;
+  --cadena: #a8d5a2;
+  --n8n: #ea4b71;
+  --sobre-n8n: #0b0d12;      /* texto sobre el rosa: 4,6:1 (blanco daba 3,66:1) */
+
+  --nodo-caja: #1a1e28;
+  --nodo-borde: #3a4152;
+  --nodo-texto: #a3a6af;     /* etiquetas de nodos pendientes: no bajan de 4,5:1 */
+
+  --sans: "DM Sans", system-ui, "Segoe UI", Roboto, sans-serif;
+  --display: "Syne", "Arial Black", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+
+  --borde: max(1rem, env(safe-area-inset-left), env(safe-area-inset-right));
+  --radio: 14px;
+  --curva: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 600px at 20% 0%, rgb(201 169 110 / 0.07), transparent 60%),
+    var(--fondo);
+  background-color: var(--fondo);
+  color: var(--texto);
+  font: 400 1rem/1.6 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, p, dl, dd, figure, pre { margin: 0; }
+a { color: var(--oro-2); }
+
+:focus-visible { outline: 3px solid var(--oro-2); outline-offset: 3px; }
+
+.oculto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.saltar { position: absolute; left: -999px; top: 1rem; z-index: 20; padding: 0.6rem 1rem; border-radius: 10px; background: var(--oro-2); color: var(--fondo); font-weight: 600; }
+.saltar:focus { left: 1rem; }
+
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+.progreso { display: none; }
+
+/* ---------- Portada ---------- */
+
+.escenario { max-width: 76rem; margin: 0 auto; padding: 2rem var(--borde) 1rem; }
+
+.portada { display: flex; flex-direction: column; gap: 1rem; }
+
+.ojal { display: flex; align-items: center; gap: 0.6rem; color: var(--texto-2); font: 400 0.8rem var(--mono); }
+.punto { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+
+h1 { font: 800 clamp(1.75rem, 3.4vw, 3rem)/1.08 var(--display); letter-spacing: -0.02em; text-wrap: balance; }
+h1 .nombre { display: block; }
+h1 .oro { background: linear-gradient(90deg, var(--oro), var(--oro-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+.entrada { max-width: 52ch; color: var(--texto-2); }
+
+.acciones { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+
+.boton {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  min-height: 44px; padding: 0.55rem 1rem; border: 1px solid var(--linea); border-radius: 10px;
+  background: var(--panel-2); color: var(--texto); font: 500 0.95rem var(--sans); text-decoration: none;
+  cursor: pointer; touch-action: manipulation;
+  transition: border-color 160ms linear, background-color 160ms linear;
+}
+.boton:hover { border-color: var(--oro); }
+.boton--primario { background: var(--n8n); border-color: var(--n8n); color: var(--sobre-n8n); font-weight: 700; }
+.boton--primario:hover { background: #f06a8a; border-color: #f06a8a; }
+.boton[hidden] { display: none; }
+
+/* ---------- Editor y lienzo ---------- */
+
+.editor { margin-top: 1.5rem; border: 1px solid var(--linea); border-radius: var(--radio); overflow: hidden; background: var(--panel); }
+
+.barra-editor { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.5rem 0.9rem; border-bottom: 1px solid var(--linea); font: 400 0.8rem var(--mono); color: var(--texto-2); }
+.nombre-flujo { color: var(--texto); }
+.estado b { color: var(--ok); font-weight: 400; }
+
+.lienzo { position: relative; background: radial-gradient(circle, #262b38 1px, transparent 1.3px) 0 0 / 22px 22px; }
+
+.grafo { display: block; width: 100%; height: auto; overflow: visible; }
+.grafo--vertical { display: none; max-width: 26rem; margin: 0 auto; }
+
+.arista { fill: none; stroke: #343a4a; stroke-width: 2.5; }
+.arista-on { fill: none; stroke: var(--oro); stroke-width: 2.5; }
+.items { font: 400 13px var(--mono); fill: var(--texto-2); }
+
+.nodo { cursor: pointer; outline: none; }
+.caja { fill: var(--nodo-caja); stroke: var(--nodo-borde); stroke-width: 2; transition: stroke 300ms linear, fill 300ms linear; }
+.corre { fill: none; stroke: var(--oro-2); stroke-width: 3; stroke-dasharray: 20 80; stroke-linecap: round; opacity: 0; }
+.foco { fill: none; stroke: var(--texto); stroke-width: 2.5; opacity: 0; }
+.icono { color: var(--nodo-texto); fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: color 300ms linear; }
+.icono-texto { font: 700 20px var(--mono); fill: var(--nodo-texto); transition: fill 300ms linear; }
+.icono-texto--grande { font-size: 28px; }
+.etiqueta { font: 500 17px var(--sans); fill: var(--nodo-texto); transition: fill 300ms linear; }
+.sub { font: 400 13px var(--mono); fill: var(--nodo-texto); }
+.cinta { fill: var(--n8n); }
+.cinta-texto { font: 700 11px var(--sans); fill: var(--sobre-n8n); letter-spacing: 0.06em; }
+.check { opacity: 0; transition: opacity 250ms linear; }
+.check circle { fill: var(--ok); }
+.check path { fill: none; stroke: var(--fondo); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+.nodo.on .caja { stroke: var(--ok); fill: #16201a; }
+.nodo.on .icono { color: var(--texto); }
+.nodo.on .icono-texto, .nodo.on .etiqueta { fill: var(--texto); }
+.nodo.on .check { opacity: 1; }
+.nodo--estrella .caja { stroke-width: 2.5; }
+.nodo--estrella.on .caja { stroke: var(--oro); }
+.nodo--estrella .etiqueta { font-size: 19px; }
+.nodo:focus-visible .foco { opacity: 1; }
+
+@media (hover: hover) and (pointer: fine) {
+  .nodo:hover .caja { stroke: var(--oro-2); }
+}
+
+.paquete { fill: var(--oro-2); }
+
+/* ---------- Paneles de salida ---------- */
+
+.paneles { display: grid; gap: 1rem; margin-top: 1.5rem; }
+
+.paso { display: flex; flex-direction: column; min-width: 0; border: 1px solid var(--linea); border-radius: var(--radio); background: var(--panel); overflow: hidden; scroll-margin-top: 1rem; }
+
+.cabeza { display: flex; justify-content: space-between; gap: 1rem; padding: 0.6rem 1rem; border-bottom: 1px solid var(--linea); font: 400 0.75rem var(--mono); color: var(--texto-2); text-transform: uppercase; letter-spacing: 0.08em; }
+.cabeza b { color: var(--ok); font-weight: 400; white-space: nowrap; }
+
+.cuerpo { display: flex; flex-direction: column; gap: 0.9rem; padding: 1.1rem; min-height: 0; }
+.cuerpo h2 { font: 700 clamp(1.3rem, 2vw, 1.75rem)/1.15 var(--sans); letter-spacing: -0.01em; }
+.cuerpo p { color: var(--texto-2); }
+
+.insignia { align-self: flex-start; padding: 0.2rem 0.65rem; border-radius: 999px; background: var(--n8n); color: var(--sobre-n8n) !important; font: 700 0.72rem var(--sans); letter-spacing: 0.08em; text-transform: uppercase; }
+
+.cifras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+.cifras div { display: flex; flex-direction: column-reverse; padding: 0.6rem 0.75rem; border: 1px solid var(--linea); border-radius: 10px; background: var(--panel-2); }
+.cifras dd { font: 600 1.4rem/1.1 var(--sans); color: var(--oro-2); font-variant-numeric: tabular-nums; }
+.cifras dt { font-size: 0.8rem; color: var(--texto-2); }
+
+.json { padding: 0.75rem 0.9rem; border: 1px solid var(--linea); border-radius: 10px; background: #0f1218; color: var(--texto-2); font: 400 0.82rem/1.7 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.k { color: var(--clave); }
+.s { color: var(--cadena); }
+
+.navegador { flex-shrink: 0; border: 1px solid var(--linea); border-radius: 10px; overflow: hidden; background: #0f1218; }
+.barra-navegador { display: flex; align-items: center; gap: 6px; padding: 0.45rem 0.65rem; border-bottom: 1px solid var(--linea); }
+.barra-navegador i { width: 9px; height: 9px; border-radius: 50%; background: #343a4a; }
+.barra-navegador span { margin-left: 0.5rem; overflow: hidden; color: var(--texto-2); font: 400 0.75rem var(--mono); white-space: nowrap; text-overflow: ellipsis; }
+.vista { position: relative; }
+.vista img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
+.abrir { position: absolute; right: 0.6rem; bottom: 0.6rem; padding: 0.4rem 0.7rem; border: 1px solid var(--linea); border-radius: 8px; background: rgb(11 13 18 / 0.9); color: var(--texto); font: 600 0.85rem var(--sans); text-decoration: none; }
+/* Toda la vista previa se puede pulsar; el nombre accesible del enlace sigue siendo su texto. */
+.abrir::after { content: ""; position: absolute; inset: -100vmax; }
+.vista { overflow: hidden; }
+.abrir:hover, .abrir:focus-visible { border-color: var(--oro-2); }
+.abrir:focus-visible { outline-offset: 2px; }
+
+.aviso-copia:empty { display: none; }
+
+/* ---------- Pie ---------- */
+
+.pie { padding: 2.5rem var(--borde) calc(3rem + env(safe-area-inset-bottom)); color: var(--texto-2); font-size: 0.9rem; text-align: center; }
+.pie ul { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 1.5rem; margin: 0 0 0.5rem; padding: 0; list-style: none; }
+.pie a { display: inline-flex; align-items: center; min-height: 44px; color: var(--texto-2); text-underline-offset: 0.2em; }
+.pie a:hover { color: var(--texto); }
+
+/* ---------- Capa base en pantallas anchas ---------- */
+
+@media (min-width: 56.25rem) {
+  .paneles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #hola, #hablemos { grid-column: 1 / -1; }
+}
+
+@media (max-width: 56.24rem) {
+  .grafo--horizontal { display: none; }
+  .grafo--vertical { display: block; }
+}
+
+/* =====================================================================
+   Escena fijada: el scroll ejecuta el flujo. Solo con .flujo-activo.
+   ===================================================================== */
+
+.flujo-activo .progreso { display: block; position: fixed; inset: 0 0 auto; z-index: 10; height: 3px; background: linear-gradient(90deg, var(--n8n), var(--oro)); transform: scaleX(0); transform-origin: 0 50%; }
+
+.flujo-activo .escenario {
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.75rem;
+  max-width: none; height: 100vh; height: 100svh; margin: 0;
+  padding: 1.5rem max(1.5rem, env(safe-area-inset-left)) 1.5rem max(1.5rem, env(safe-area-inset-right));
+}
+.flujo-activo .izquierda { display: flex; flex-direction: column; gap: 1.1rem; min-width: 0; min-height: 0; }
+.flujo-activo .editor { display: flex; flex-direction: column; flex: 1; min-height: 0; margin: 0; }
+.flujo-activo .lienzo { flex: 1; min-height: 0; overflow: hidden; }
+.flujo-activo .grafo { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; }
+
+.flujo-activo .paneles { position: relative; display: block; min-width: 0; min-height: 0; margin: 0; }
+.flujo-activo .paso { position: absolute; inset: 0; visibility: hidden; opacity: 0; }
+.flujo-activo .paso.activo, .flujo-activo:not(.listo) #hola { visibility: visible; opacity: 1; }
+.flujo-activo .cuerpo { flex: 1; overflow: auto; overscroll-behavior: contain; }
+
+/* Antes de que flujo.js tome el control, el flujo se ve sin ejecutar (sin parpadeo del final). */
+.flujo-activo:not(.listo) .nodo:not([data-id="t"]) .caja { stroke: var(--nodo-borde); fill: var(--nodo-caja); }
+.flujo-activo:not(.listo) .nodo:not([data-id="t"]) .check { opacity: 0; }
+.flujo-activo:not(.listo) .arista-on, .flujo-activo:not(.listo) .items, .flujo-activo:not(.listo) .estado { visibility: hidden; }
+
+.flujo-activo .items { opacity: 0; transition: opacity 200ms linear; }
+.flujo-activo .items.on { opacity: 1; }
+
+/* Celular: arriba el título, al medio el lienzo, abajo el panel. */
+@media (max-width: 56.24rem) {
+  .flujo-activo .escenario { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 0.8fr) minmax(0, 1.45fr); gap: 0.6rem; padding: 0.6rem var(--borde); }
+  .flujo-activo .izquierda { display: contents; }
+  .flujo-activo .portada { gap: 0; }
+  .flujo-activo .ojal, .flujo-activo .entrada, .flujo-activo .portada .acciones { display: none; }
+  .flujo-activo h1 { font-size: 1.1rem; line-height: 1.15; }
+  .flujo-activo h1 .nombre { display: inline; }
+  .flujo-activo .nombre-flujo { display: none; }
+  .flujo-activo .cabeza { padding: 0.45rem 0.8rem; }
+  .flujo-activo .cuerpo { gap: 0.6rem; padding: 0.8rem; }
+  .flujo-activo .cuerpo h2 { font-size: 1.2rem; }
+  .flujo-activo .cuerpo p { line-height: 1.5; }
+  /* El nodo ya lleva «MI FUERTE» y su nombre accesible lo dice: en celular el panel no lo repite. */
+  .flujo-activo .insignia { display: none; }
+  .flujo-activo .json:not(.json--siempre) { display: none; }
+  .flujo-activo .json { padding: 0.55rem 0.75rem; font-size: 0.74rem; line-height: 1.5; }
+  .flujo-activo .cifras div { padding: 0.45rem 0.55rem; }
+  .flujo-activo .cifras dd { font-size: 1.1rem; }
+  .flujo-activo .cifras dt { font-size: 0.72rem; line-height: 1.3; }
+  .flujo-activo .vista img { aspect-ratio: 2 / 1; }
+}
+
+/* Celular bajo: la vista previa cede su sitio y queda el enlace como botón. */
+@media (max-width: 56.24rem) and (max-height: 46rem) {
+  .flujo-activo .navegador { border: 0; background: none; }
+  .flujo-activo .barra-navegador, .flujo-activo .vista img { display: none; }
+  .flujo-activo .abrir { position: static; display: inline-flex; align-items: center; min-height: 44px; padding: 0.55rem 1rem; border-radius: 10px; background: var(--panel-2); }
+  .flujo-activo .abrir::after { display: none; }
+  .flujo-activo #hablemos .json { display: none; }
+}
+
+/* ---------- Accesibilidad del sistema ---------- */
+
+@media (forced-colors: active) {
+  h1 .oro { background: none; color: CanvasText; }
+  .nodo:focus-visible .foco { stroke: Highlight; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
