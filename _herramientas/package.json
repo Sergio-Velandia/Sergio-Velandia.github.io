@@ -1,0 +1,15 @@
+{
+  "name": "hub-herramientas",
+  "private": true,
+  "description": "Herramientas del hub: no forman parte de la página ni se compilan. Se corren a mano desde la raíz del repo.",
+  "type": "module",
+  "scripts": {
+    "capturas": "node capturas.mjs",
+    "grafo": "node grafo.mjs",
+    "datos": "node datos.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "1.65.0",
+    "sharp": "0.35.5"
+  }
+}
