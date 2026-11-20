@@ -5,7 +5,8 @@ Copyright (c) 2026 Sergio Andrés Ramírez Velandia
 This license covers the source code of this repository only. Written content,
 images and personal branding are not covered and remain all rights reserved.
 The fonts in assets/fonts/ are under the SIL Open Font License; see the license
-file next to each one.
+file next to each one. GSAP, in assets/vendor/gsap/, is distributed under its own
+Standard "No Charge" License: https://gsap.com/standard-license
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

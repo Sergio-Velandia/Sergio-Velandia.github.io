@@ -14,9 +14,15 @@ reparte hacia mis cuatro proyectos. No tiene backend, ni cuentas, ni formulario.
 
 ## Cómo está hecho
 
-HTML y CSS planos, sin build ni framework. La escena 3D usa three.js desde CDN y es una capa
-opcional: si no carga, si el navegador no tiene WebGL o si hay `prefers-reduced-motion`, la página
-funciona igual y se lee entera.
+La portada es un flujo de n8n que se ejecuta mientras haces scroll: un disparador, Moss Nexus como
+nodo principal, un Switch hacia los otros tres proyectos, un Merge y el contacto. A la derecha, el
+panel de salida de cada nodo.
+
+HTML, CSS y JavaScript planos, sin build ni framework. GitHub Pages publica la rama tal cual: un
+paso de compilación obligaría a cambiar el origen de Pages a mano y pondría en riesgo la raíz del
+dominio, de la que cuelgan los cuatro proyectos. El movimiento usa GSAP y ScrollTrigger, alojados en
+el repo. Sin JavaScript o con `prefers-reduced-motion`, la página se lee entera con el flujo ya
+ejecutado.
 
 Para verlo en local hay que servir la carpeta con cualquier servidor estático, por ejemplo
 `npx serve`. Abierto directamente, `index.html` no carga el CSS ni las fuentes, porque usa rutas
@@ -38,45 +44,72 @@ Es el **repo de usuario**: sirve la raíz del dominio y es donde vive el `CNAME`
 - `404.html` usa rutas absolutas porque se sirve desde cualquier profundidad.
 - Todo lo que esté en este repo se publica: los documentos de trabajo no van aquí.
 
-### Tokens
+- `assets/hub.css` es ahora solo el estilo de los 404: lo cargan el de la raíz y el del portafolio.
+  La portada usa `assets/flujo.css`.
 
-Oro y grafito, los del portafolio; el hub no inventa color propio. Viven en `assets/hub.css`.
+### Archivos
 
-| Token | Valor | Uso | Contraste sobre su fondo |
-|---|---|---|---|
-| `--bg-base` | `#0a0a09` | Fondo, y texto sobre oro | 8,85:1 sobre oro |
-| `--text-primary` | `#f5f2ec` | Texto principal | 17,73:1 |
-| `--text-secondary` | `#a8a49a` | Texto de apoyo | 7,96:1 |
-| `--accent` | `#c9a96e` | Portafolio y barrido | 8,85:1 |
+| Archivo | Qué hace |
+|---|---|
+| `index.html` | Todo el contenido, y los dos SVG del flujo ya ejecutados (horizontal y vertical) |
+| `assets/flujo.css` | Capa base apilada y, con `.flujo-activo`, la escena fijada |
+| `assets/flujo.js` | El scroll ejecuta el flujo; copiar el correo |
+| `assets/vendor/gsap/` | GSAP 3.15.1 y ScrollTrigger |
+| `assets/previews/` | Capturas de los cuatro sitios en WebP |
+| `_herramientas/` | Scripts que se corren a mano; no forman parte de la página |
 
-Fuentes autoalojadas: Syne 800 y DM Sans 400/500, ambas con licencia SIL OFL (`assets/fonts/`).
+### Cuándo se ve qué
 
-### Movimiento
-
-Un solo gesto: al pasar el cursor o enfocar, una copia en oro de la fila se revela con `clip-path`
-(280 ms al entrar, 170 ms al salir). Con `prefers-reduced-motion` pasa a un fundido de 150 ms.
-
-### Escena 3D
-
-`assets/escena.js` es lo único que activa los capítulos dirigidos por scroll. Se carga en el `<head>`
-para hacerlo antes del primer pintado. Sin esa clase, la página es la capa base de arriba.
+Un `<script>` corto en el `<head>` pone `.flujo-activo` antes del primer pintado. Sin esa clase, la
+página es la capa base: el flujo ejecutado y los paneles apilados.
 
 | Situación | Qué se ve |
 |---|---|
-| Sin JavaScript, `escena.js` caído o con error | Capa base |
-| `prefers-reduced-motion` | Capa base, sin contexto WebGL ni descarga de three.js |
-| Ventana baja o contenido que no cabe en una pantalla | Capa base, sin descargar three.js |
-| three.js no carga, no pasa el SRI o tarda más de 8 s | Capa base con un aviso discreto |
-| Sin GPU (pintado por software) o contexto WebGL perdido | Capa base con un aviso discreto |
+| Sin JavaScript | Capa base |
+| `prefers-reduced-motion` | Capa base, y GSAP ni se usa |
+| Ventana de menos de 560 px de alto | Capa base |
+| GSAP o `flujo.js` no cargan, fallan o tardan más de 5 s | Capa base |
 
-three.js va fijado en `0.159.0`, el último con un archivo único para `<script>`, con integridad SRI;
-si jsDelivr falla se intenta unpkg. Para actualizarlo hay que recalcular el hash en `escena.js`.
+### Herramientas
 
-El guion está en fracciones de scroll: la esfera entre 0,18 y 0,44, las constelaciones entre 0,62 y
-0,84. El giro se aplica en el sombreador antes del último `mix`, para que las constelaciones
-aterricen sin rotar sobre su enlace, y esquivan los rectángulos del texto para no afectar el contraste.
+Se instalan una vez con `npm --prefix _herramientas install` y usan el Chrome o el Edge del equipo.
+
+| Comando | Qué hace |
+|---|---|
+| `npm --prefix _herramientas run capturas` | Vuelve a tomar las vistas previas de los cuatro sitios |
+| `npm --prefix _herramientas run datos` | Compara cada versión, estado y cifra de Nexus con su fuente; falla si alguna no cuadra |
+| `npm --prefix _herramientas run grafo` | Reescribe los dos SVG del flujo en `index.html` a partir de `grafo.mjs` |
+
+Las cifras no se actualizan solas: cuando un proyecto publique una versión, `datos` lo señala y se
+corrige a mano en `index.html` (y en `grafo.mjs` si la cifra va en un nodo).
+
+### Movimiento
+
+- Cada paso se detiene en su panel, y Nexus tiene la pausa más larga. Al soltar el scroll, se ajusta
+  al paso más cercano.
+- La cámara del lienzo sigue al nodo que se ejecuta; en celular el grafo es vertical y se lee a
+  tamaño real.
+- El anillo de «ejecutándose» avanza con el scroll, no con el reloj: si el scroll se detiene, el anillo
+  también.
+- Los nodos son enlaces a su paso; con el teclado, el grafo es una sola parada y se recorre con las
+  flechas.
+- En reposo no se dibuja nada.
+
+### Colores
+
+| Token | Valor | Uso | Contraste |
+|---|---|---|---|
+| `--fondo` / `--panel` | `#0b0d12` / `#13161e` | Fondo y paneles | — |
+| `--texto` | `#f0ede8` | Texto principal | 15,49:1 sobre `--panel` |
+| `--texto-2` | `#a3a6af` | Texto de apoyo y nodos pendientes | 7,43:1 sobre `--panel` (6,85:1 dentro de un nodo) |
+| `--n8n` | `#ea4b71` | Botón principal y «MI FUERTE» | Texto `#0b0d12` encima: 5,32:1 (blanco daba 3,66:1) |
+| `--oro` / `--oro-2` | `#c9a96e` / `#e6c78f` | Aristas ejecutadas y cifras | — |
+| `--ok` | `#6fcf97` | Nodos ejecutados | — |
+
+Fuentes autoalojadas: Syne 800 para el titular, DM Sans para el texto y JetBrains Mono para el JSON.
 
 ## Licencia
 
-MIT para el código. Los textos, las imágenes y la marca personal no están cubiertos, y las fuentes de
-`assets/fonts/` tienen su propia licencia SIL OFL. Ver [LICENSE](LICENSE).
+MIT para el código. Los textos, las imágenes y la marca personal no están cubiertos. Las fuentes de
+`assets/fonts/` tienen su propia licencia SIL OFL, y GSAP (`assets/vendor/gsap/`) la suya, estándar y
+sin costo. Ver [LICENSE](LICENSE).
