@@ -16,18 +16,18 @@
   --panel-2: #181c26;
   --linea: #2a2f3c;
   --texto: #f0ede8;
-  --texto-2: #a3a6af;        /* 7,1:1 sobre --panel */
+  --texto-2: #a3a6af;        /* 7,43:1 sobre --panel */
   --oro: #c9a96e;
   --oro-2: #e6c78f;
   --ok: #6fcf97;
   --clave: #e8b86e;
   --cadena: #a8d5a2;
   --n8n: #ea4b71;
-  --sobre-n8n: #0b0d12;      /* texto sobre el rosa: 4,6:1 (blanco daba 3,66:1) */
+  --sobre-n8n: #0b0d12;      /* texto sobre el rosa: 5,32:1 (blanco daba 3,66:1) */
 
   --nodo-caja: #1a1e28;
   --nodo-borde: #3a4152;
-  --nodo-texto: #a3a6af;     /* etiquetas de nodos pendientes: no bajan de 4,5:1 */
+  --nodo-texto: #a3a6af;     /* etiquetas de nodos pendientes: 6,85:1 sobre la caja, 7,43:1 sobre el lienzo */
 
   --sans: "DM Sans", system-ui, "Segoe UI", Roboto, sans-serif;
   --display: "Syne", "Arial Black", system-ui, sans-serif;
@@ -110,6 +110,7 @@ h1 .oro { background: linear-gradient(90deg, var(--oro), var(--oro-2)); -webkit-
 
 .arista { fill: none; stroke: #343a4a; stroke-width: 2.5; }
 .arista-on { fill: none; stroke: var(--oro); stroke-width: 2.5; }
+.flujo-activo .arista-on { stroke-dasharray: 1; stroke-dashoffset: 1; }
 .items { font: 400 13px var(--mono); fill: var(--texto-2); }
 
 .nodo { cursor: pointer; outline: none; }
@@ -206,7 +207,9 @@ h1 .oro { background: linear-gradient(90deg, var(--oro), var(--oro-2)); -webkit-
 
 .flujo-activo .progreso { display: block; position: fixed; inset: 0 0 auto; z-index: 10; height: 3px; background: linear-gradient(90deg, var(--n8n), var(--oro)); transform: scaleX(0); transform-origin: 0 50%; }
 
+.flujo-activo main { height: 700vh; height: 700svh; }
 .flujo-activo .escenario {
+  position: sticky; top: 0;
   display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.75rem;
   max-width: none; height: 100vh; height: 100svh; margin: 0;
   padding: 1.5rem max(1.5rem, env(safe-area-inset-left)) 1.5rem max(1.5rem, env(safe-area-inset-right));

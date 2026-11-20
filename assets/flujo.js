@@ -68,15 +68,9 @@
     });
     [].forEach.call(svg.querySelectorAll(".arista-on"), function (ruta) {
       var clave = ruta.dataset.arista;
-      var largo = ruta.getTotalLength();
-      var puntos = new Float32Array((MUESTRAS + 1) * 2);
-      for (var i = 0; i <= MUESTRAS; i++) {
-        var q = ruta.getPointAtLength((largo * i) / MUESTRAS);
-        puntos[i * 2] = q.x;
-        puntos[i * 2 + 1] = q.y;
-      }
-      ruta.style.strokeDasharray = largo;
-      m.aristas[clave] = { ruta: ruta, largo: largo, puntos: puntos, items: svg.querySelector('.items[data-arista="' + clave + '"]') };
+      // Cada arista es una sola curva Bézier: sus puntos salen de la fórmula, sin medir el DOM.
+      // El trazo usa pathLength="1", así que tampoco hace falta su largo.
+      m.aristas[clave] = { ruta: ruta, puntos: muestrearCurva(ruta.getAttribute("d")), items: svg.querySelector('.items[data-arista="' + clave + '"]') };
       m.nodos[clave.split(">")[1]].entra.push(clave);
     });
     var capa = svg.querySelector(".paquetes");
@@ -100,6 +94,30 @@
       m.paquetes.push({ g: g, estela: estela, cabeza: cabeza, visible: false });
     }
     return m;
+  }
+
+  // Puntos repartidos por igual a lo largo de la curva (no por igual en t), para que el paquete
+  // avance a velocidad pareja.
+  function muestrearCurva(d) {
+    var n = (d.match(/-?[0-9.]+/g) || []).map(Number);
+    if (n.length !== 8) throw new Error("Arista con forma inesperada: " + d);
+    var bez = function (t, a, b, c, e) { var u = 1 - t; return u * u * u * a + 3 * u * u * t * b + 3 * u * t * t * c + t * t * t * e; };
+    var FINO = 96, xs = [], ys = [], acum = [0];
+    for (var i = 0; i <= FINO; i++) {
+      var t = i / FINO;
+      xs.push(bez(t, n[0], n[2], n[4], n[6]));
+      ys.push(bez(t, n[1], n[3], n[5], n[7]));
+      if (i) acum.push(acum[i - 1] + Math.hypot(xs[i] - xs[i - 1], ys[i] - ys[i - 1]));
+    }
+    var total = acum[FINO], puntos = new Float32Array((MUESTRAS + 1) * 2), j = 0;
+    for (var k = 0; k <= MUESTRAS; k++) {
+      var objetivo = (total * k) / MUESTRAS;
+      while (j < FINO - 1 && acum[j + 1] < objetivo) j++;
+      var r = (objetivo - acum[j]) / Math.max(1e-6, acum[j + 1] - acum[j]);
+      puntos[k * 2] = mezcla(xs[j], xs[j + 1], limitar(r, 0, 1));
+      puntos[k * 2 + 1] = mezcla(ys[j], ys[j + 1], limitar(r, 0, 1));
+    }
+    return puntos;
   }
 
   function punto(arista, t) {
@@ -135,7 +153,7 @@
     var usados = 0;
     Object.keys(m.aristas).forEach(function (clave) {
       var a = m.aristas[clave], v = g[clave];
-      poner(m, "d:" + clave, Math.round(a.largo * (1 - v) * 10) / 10, function (x) { a.ruta.style.strokeDashoffset = x; });
+      poner(m, "d:" + clave, Math.round((1 - v) * 1000) / 1000, function (x) { a.ruta.style.strokeDashoffset = x; });
       poner(m, "i:" + clave, v >= 0.999, function (on) { if (a.items) a.items.classList.toggle("on", on); });
       if (v > 0.01 && v < 0.99 && usados < m.paquetes.length) {
         var pk = m.paquetes[usados++];
@@ -337,11 +355,12 @@
     };
     medirLienzo();
 
+    // La escena se fija con position: sticky (CSS). ScrollTrigger solo lee el progreso y hace el
+    // snap: no envuelve ni mueve nada en el DOM.
     st = ST.create({
       trigger: "#flujo",
       start: "top top",
-      end: "+=600%",
-      pin: ".escenario",
+      end: "bottom bottom",
       scrub: 0.5,
       snap: { snapTo: PAUSAS, duration: { min: 0.2, max: 0.6 }, delay: 0.15, ease: "power1.inOut" },
       onUpdate: function (self) {
@@ -416,9 +435,6 @@
     gsap.ticker.add(tick);
     tick();
     raiz.classList.add("listo");
-
-    // Único momento orquestado al cargar: los nodos aparecen en cascada. El texto ya está en su sitio.
-    if (!hash) gsap.from(modeloActivo().orden.map(function (n) { return n.el; }), { opacity: 0, scale: 0.85, transformOrigin: "50% 50%", duration: 0.45, stagger: 0.05, ease: "back.out(1.6)", clearProps: "opacity,transform" });
   }
 
   try {

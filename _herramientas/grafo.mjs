@@ -11,14 +11,14 @@ const INDEX = new URL("../index.html", import.meta.url)
 
 // Las cifras que aparecen en los nodos llevan data-dato: `npm run datos` las compara con su fuente.
 const NODOS = [
-  { id: "t", etiqueta: "Cuando llegas", sub: "Webhook", icono: "rayo", at: 0, paso: "hola", aria: "Cuando llegas, el disparador del flujo. Ver su salida" },
-  { id: "nx", etiqueta: "Moss Nexus", sub: "13 plantillas", dato: "nexus.plantillas", subFmt: (v) => `${v} plantillas`, icono: "n8n", at: 1, paso: "moss-nexus", estrella: true, aria: "Moss Nexus, mi fuerte. Ver su salida" },
-  { id: "sw", etiqueta: "Switch", sub: "3 rutas", icono: "reparte", at: 1.5, paso: "moss", aria: "Switch: reparte hacia Moss, Moss Taste y el portafolio. Ir a la primera ruta" },
-  { id: "mo", etiqueta: "Moss", sub: "v1.20.0", dato: "moss.version", subFmt: (v) => `v${v}`, icono: "hoja", at: 2, paso: "moss", aria: "Moss. Ver su salida" },
-  { id: "ta", etiqueta: "Moss Taste", sub: "v1.1.1", dato: "taste.version", subFmt: (v) => `v${v}`, icono: "olla", at: 3, paso: "moss-taste", aria: "Moss Taste. Ver su salida" },
-  { id: "pf", etiqueta: "Portafolio", sub: "v1.2.3", dato: "portafolio.version", subFmt: (v) => `v${v}`, icono: "sv", at: 4, paso: "portafolio", aria: "Portafolio. Ver su salida" },
-  { id: "mg", etiqueta: "Merge", sub: "Une 3 ramas", icono: "une", at: 4.5, paso: "hablemos", aria: "Merge: une las tres ramas. Ir al final del flujo" },
-  { id: "em", etiqueta: "Hablemos", sub: "Correo", icono: "sobre", at: 5, paso: "hablemos", aria: "Hablemos, el contacto. Ver su salida" },
+  { id: "t", etiqueta: "Cuando llegas", sub: "Webhook", icono: "rayo", at: 0, paso: "hola" },
+  { id: "nx", etiqueta: "Moss Nexus", sub: "13 plantillas", dato: "nexus.plantillas", subFmt: (v) => `${v} plantillas`, icono: "n8n", at: 1, paso: "moss-nexus", estrella: true },
+  { id: "sw", etiqueta: "Switch", sub: "3 rutas", icono: "reparte", at: 1.5, paso: "moss" },
+  { id: "mo", etiqueta: "Moss", sub: "v1.20.0", dato: "moss.version", subFmt: (v) => `v${v}`, icono: "hoja", at: 2, paso: "moss" },
+  { id: "ta", etiqueta: "Moss Taste", sub: "v1.1.1", dato: "taste.version", subFmt: (v) => `v${v}`, icono: "olla", at: 3, paso: "moss-taste" },
+  { id: "pf", etiqueta: "Portafolio", sub: "v1.2.3", dato: "portafolio.version", subFmt: (v) => `v${v}`, icono: "sv", at: 4, paso: "portafolio" },
+  { id: "mg", etiqueta: "Merge", sub: "Une 3 ramas", icono: "une", at: 4.5, paso: "hablemos" },
+  { id: "em", etiqueta: "Hablemos", sub: "Correo", icono: "sobre", at: 5, paso: "hablemos" },
 ]
 
 // Aristas con los ítems que lleva cada una, como los muestra n8n después de ejecutar.
@@ -64,8 +64,8 @@ function nodo(n, geo, prefijo) {
   const x0 = r(cx - w / 2), y0 = r(cy - h / 2)
   const tamIcono = n.estrella ? 40 : 30
   let icono
-  if (n.icono === "n8n") icono = `<text class="icono-texto icono-texto--grande" x="${w / 2}" y="${h / 2 + 9}" text-anchor="middle">n8n</text>`
-  else if (n.icono === "sv") icono = `<text class="icono-texto" x="${w / 2}" y="${h / 2 + 7}" text-anchor="middle">SV</text>`
+  if (n.icono === "n8n") icono = `<text class="icono-texto icono-texto--grande" aria-hidden="true" x="${w / 2}" y="${h / 2 + 9}" text-anchor="middle">n8n</text>`
+  else if (n.icono === "sv") icono = `<text class="icono-texto" aria-hidden="true" x="${w / 2}" y="${h / 2 + 7}" text-anchor="middle">SV</text>`
   else icono = `<use class="icono" href="#i-${n.icono}" x="${(w - tamIcono) / 2}" y="${(h - tamIcono) / 2}" width="${tamIcono}" height="${tamIcono}"/>`
   const sub = n.dato
     ? `<text class="sub" x="${w / 2}" y="${h + 44}" text-anchor="middle" data-dato="${n.dato}" data-formato="${n.subFmt("{v}")}">${n.sub}</text>`
@@ -73,7 +73,7 @@ function nodo(n, geo, prefijo) {
   const etiquetaEstrella = n.estrella
     ? `<rect class="cinta" x="${w / 2 - 44}" y="-13" width="88" height="24" rx="12"/><text class="cinta-texto" x="${w / 2}" y="3.5" text-anchor="middle">MI FUERTE</text>`
     : ""
-  return `<a class="nodo on${n.estrella ? " nodo--estrella" : ""}" href="#${n.paso}" data-id="${n.id}" data-at="${n.at}" data-cx="${cx}" data-cy="${cy}" data-w="${w}" data-h="${h}" aria-label="${n.aria}" id="${prefijo}-${n.id}">
+  return `<a class="nodo on${n.estrella ? " nodo--estrella" : ""}" href="#${n.paso}" data-id="${n.id}" data-at="${n.at}" data-cx="${cx}" data-cy="${cy}" data-w="${w}" data-h="${h}" id="${prefijo}-${n.id}">
         <g transform="translate(${x0},${y0})">
           <rect class="caja" width="${w}" height="${h}" rx="14"/>
           <rect class="corre" width="${w}" height="${h}" rx="14" pathLength="100"/>
@@ -82,7 +82,7 @@ function nodo(n, geo, prefijo) {
           <text class="etiqueta" x="${w / 2}" y="${h + 24}" text-anchor="middle">${n.etiqueta}</text>
           ${sub}
           ${etiquetaEstrella}
-          <g class="check" transform="translate(${w - 4},${n.estrella ? 16 : -4})"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
+          <g class="check" aria-hidden="true" transform="translate(${w - 4},${n.estrella ? 16 : -4})"><circle r="11"/><path d="M-4.5,0 L-1.2,3.4 L4.6,-3.4"/></g>
         </g>
       </a>`
 }
@@ -91,11 +91,11 @@ function svg(nombre) {
   const geo = GEOMETRIAS[nombre], vertical = nombre === "vertical", p = vertical ? "gv" : "gh"
   const aristas = ARISTAS.map(([de, a, items]) => ({ de, a, items, ...arista(geo, de, a, vertical) }))
   const lineas = aristas.map((e) => `<path class="arista" d="${e.d}"/>`).join("\n        ")
-  const encendidas = aristas.map((e) => `<path class="arista-on" data-arista="${e.de}>${e.a}" d="${e.d}"/>`).join("\n        ")
+  const encendidas = aristas.map((e) => `<path class="arista-on" data-arista="${e.de}>${e.a}" d="${e.d}" pathLength="1"/>`).join("\n        ")
   const items = aristas.map((e) => `<text class="items" data-arista="${e.de}>${e.a}" x="${r(e.medio[0])}" y="${r(e.medio[1])}" text-anchor="${e.ancla}">${e.items} ${e.items === 1 ? "item" : "items"}</text>`).join("\n        ")
-  return `<svg class="grafo grafo--${nombre}" viewBox="0 0 ${geo.ancho} ${geo.alto}" data-ancho="${geo.ancho}" data-alto="${geo.alto}" role="group" aria-labelledby="${p}-titulo" aria-describedby="${p}-desc">
+  return `<svg class="grafo grafo--${nombre}" viewBox="0 0 ${geo.ancho} ${geo.alto}" data-ancho="${geo.ancho}" data-alto="${geo.alto}" role="group" tabindex="-1" aria-labelledby="${p}-titulo" aria-describedby="${p}-desc">
       <title id="${p}-titulo">Flujo de n8n: hola-soy-sergio</title>
-      <desc id="${p}-desc">Un disparador, «Cuando llegas», lleva a Moss Nexus, mi fuerte. Un Switch reparte hacia Moss, Moss Taste y el portafolio; las tres ramas se unen en un Merge y el flujo termina en «Hablemos», el contacto. Cada nodo es un enlace a su panel.</desc>
+      <desc id="${p}-desc">Un disparador, «Cuando llegas», lleva a Moss Nexus, mi fuerte. Un Switch reparte hacia Moss, Moss Taste y el portafolio; las tres ramas se unen en un Merge y el flujo termina en «Hablemos», el contacto. Cada nodo es un enlace a su panel; con el teclado se pasa de un nodo a otro con las flechas.</desc>
       <g class="aristas">
         ${lineas}
         ${encendidas}
